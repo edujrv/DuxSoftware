@@ -41,10 +41,9 @@ public class TeamService {
     }
 
     @Transactional
-    public Boolean deleteTeamById(int id) throws NotFoundException {
+    public void deleteTeamById(int id) throws NotFoundException {
         if (teamRepository.existsById(id)) {
             teamRepository.deleteById(id);
-            return true;
         }else{
             throw new NotFoundException("Equipo no encontrado");
         }
