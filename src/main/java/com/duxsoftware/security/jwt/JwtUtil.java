@@ -1,63 +1,11 @@
 package com.duxsoftware.security.jwt;
 
-//import io.jsonwebtoken.Claims;
-//import io.jsonwebtoken.Jwts;
-//import io.jsonwebtoken.SignatureAlgorithm;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.stereotype.Component;
-//
-//import java.util.Date;
-//import java.util.HashMap;
-//import java.util.Map;
-//import java.util.function.Function;
-//
-//@Component
-//public class JwtUtil {
-//
-//    private String SECRET_KEY = "your_secret_key";
-//
-//    public String extractUsername(String token) {
-//        return extractClaim(token, Claims::getSubject);
-//    }
-//
-//    public Date extractExpiration(String token) {
-//        return extractClaim(token, Claims::getExpiration);
-//    }
-//
-//    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-//        final Claims claims = extractAllClaims(token);
-//        return claimsResolver.apply(claims);
-//    }
-//    //TODO: CHANGE!
-//    private Claims extractAllClaims(String token) {
-//        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-//    }
-//
-//    private Boolean isTokenExpired(String token) {
-//        return extractExpiration(token).before(new Date());
-//    }
-//
-//    public String generateToken(UserDetails userDetails) {
-//        Map<String, Object> claims = new HashMap<>();
-//        return createToken(claims, userDetails.getUsername());
-//    }
-//
-//    private String createToken(Map<String, Object> claims, String subject) {
-//        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-//                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
-//    }
-//
-//    public Boolean validateToken(String token, UserDetails userDetails) {
-//        final String username = extractUsername(token);
-//        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-//    }
-//}
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -71,7 +19,14 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("!sSq^ox^oz2!yu!ZhBqA2Uy6vmwzr!8nVCVg&LEpRVYc@8xfFraf9&utQETbrnpd".getBytes());
+    private final SecretKey SECRET_KEY;
+    private final int JWT_EXPIRATION_TIME;
+
+    @Autowired
+    public JwtUtil(@Value("${security.jwt.secret}") String jwtSecret, @Value("${security.jwt.expiration-time}") int expirationTime) {
+        SECRET_KEY = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        JWT_EXPIRATION_TIME = expirationTime;
+    }
 
     // Extract all claims from the JWT token
     private Claims extractAllClaims(String token) {
@@ -99,7 +54,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
