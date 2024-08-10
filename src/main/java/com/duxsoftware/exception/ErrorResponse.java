@@ -1,5 +1,6 @@
 package com.duxsoftware.exception;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ErrorResponse {
-    private String mensaje;
-    private int codigo;
+
+    @JsonProperty("mensaje")
+    private String message;
+
+    @JsonProperty("codigo")
+    private int code;
 }

@@ -1,5 +1,6 @@
 package com.duxsoftware.controller;
 
+import com.duxsoftware.dto.request.TeamRequest;
 import com.duxsoftware.exception.ErrorResponse;
 import com.duxsoftware.exception.NotFoundException;
 import com.duxsoftware.model.Team;
@@ -61,8 +62,13 @@ public class TeamController {
             @ApiResponse(responseCode = "400", description = "Solicitud Inválida")
     })
     @PostMapping("")
-    public ResponseEntity<?> createTeam(@Validated @RequestBody Team team) {
+    public ResponseEntity<?> createTeam(@Validated @RequestBody TeamRequest teamRequest) {
         try{
+            Team team = Team.builder()
+                    .name(teamRequest.getName())
+                    .league(teamRequest.getLeague())
+                    .country(teamRequest.getCountry())
+                    .build();
             return new ResponseEntity<>(teamService.saveTeam(team), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(new ErrorResponse("La solicitud es invalida", HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
@@ -76,8 +82,13 @@ public class TeamController {
             @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTeam(@PathVariable("id") int id, @Validated @RequestBody Team team) {
+    public ResponseEntity<?> updateTeam(@PathVariable("id") int id, @Validated @RequestBody TeamRequest teamRequest) {
         try {
+            Team team = Team.builder()
+                    .name(teamRequest.getName())
+                    .league(teamRequest.getLeague())
+                    .country(teamRequest.getCountry())
+                    .build();
             return new ResponseEntity<>(teamService.updateTeam(id, team), HttpStatus.OK);
         }catch (NotFoundException e){
             return new ResponseEntity<>(new ErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
