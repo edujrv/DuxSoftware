@@ -19,6 +19,7 @@ public class TeamService {
         return teamRepository.findAll();
     }
 
+
     public Team getTeamById(int id) throws NotFoundException {
         return teamRepository.findById(id).orElseThrow(() -> new NotFoundException("Equipo no encontrado"));
     }

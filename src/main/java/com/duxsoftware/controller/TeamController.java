@@ -1,13 +1,12 @@
 package com.duxsoftware.controller;
 
 import com.duxsoftware.dto.request.TeamRequest;
-import com.duxsoftware.exception.ErrorResponse;
-import com.duxsoftware.exception.NotFoundException;
 import com.duxsoftware.model.Team;
 import com.duxsoftware.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,26 +33,16 @@ public class TeamController {
             @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
     })
     @GetMapping("/{id}")
+    @SneakyThrows
     public ResponseEntity<?> getTeamById(@PathVariable("id") int id) {
-        try {
-            return new ResponseEntity<>(teamService.getTeamById(id), HttpStatus.OK);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(new ErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(teamService.getTeamById(id), HttpStatus.OK);
     }
 
     @Operation(summary = "Búsqueda de Equipos por Nombre", description = "Devuelve la lista de equipos cuyos nombres contienen el valor proporcionado en el parámetro de búsqueda.")
     @ApiResponse(responseCode = "200", description = "Lista devuelta exitosamente")
     @GetMapping("/buscar")
     public ResponseEntity<?> getTeamByName(@RequestParam("nombre") String value) {
-        try {
-            return new ResponseEntity<>(teamService.searchTeamsByName(value), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(teamService.searchTeamsByName(value), HttpStatus.OK);
     }
 
     @Operation(summary = "Creación de un equipo", description = "Registra un nuevo equipo de fútbol")
@@ -63,16 +52,12 @@ public class TeamController {
     })
     @PostMapping("")
     public ResponseEntity<?> createTeam(@Validated @RequestBody TeamRequest teamRequest) {
-        try{
-            Team team = Team.builder()
-                    .name(teamRequest.getName())
-                    .league(teamRequest.getLeague())
-                    .country(teamRequest.getCountry())
-                    .build();
-            return new ResponseEntity<>(teamService.saveTeam(team), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse("La solicitud es invalida", HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
-        }
+        Team team = Team.builder()
+                .name(teamRequest.getName())
+                .league(teamRequest.getLeague())
+                .country(teamRequest.getCountry())
+                .build();
+        return new ResponseEntity<>(teamService.saveTeam(team), HttpStatus.CREATED);
     }
 
 
@@ -82,19 +67,15 @@ public class TeamController {
             @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
     })
     @PutMapping("/{id}")
+    @SneakyThrows
     public ResponseEntity<?> updateTeam(@PathVariable("id") int id, @Validated @RequestBody TeamRequest teamRequest) {
-        try {
-            Team team = Team.builder()
-                    .name(teamRequest.getName())
-                    .league(teamRequest.getLeague())
-                    .country(teamRequest.getCountry())
-                    .build();
-            return new ResponseEntity<>(teamService.updateTeam(id, team), HttpStatus.OK);
-        }catch (NotFoundException e){
-            return new ResponseEntity<>(new ErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        Team team = Team.builder()
+                .name(teamRequest.getName())
+                .league(teamRequest.getLeague())
+                .country(teamRequest.getCountry())
+                .build();
+        return new ResponseEntity<>(teamService.updateTeam(id, team), HttpStatus.OK);
     }
 
 
@@ -104,15 +85,9 @@ public class TeamController {
             @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
     })
     @DeleteMapping("/{id}")
+    @SneakyThrows
     public ResponseEntity<?> deleteTeam(@PathVariable("id") int id) {
-        try {
             teamService.deleteTeamById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (NotFoundException e) {
-            return new ResponseEntity<>(new ErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
-        }catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
-
 }
