@@ -4,6 +4,9 @@ import com.duxsoftware.exception.ErrorResponse;
 import com.duxsoftware.exception.NotFoundException;
 import com.duxsoftware.model.Team;
 import com.duxsoftware.service.TeamService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +20,18 @@ public class TeamController {
     @Autowired
     private TeamService teamService;
 
+    @Operation(summary = "Consulta de Todos los Equipos", description = "Devuelve la lista de todos los equipos de fútbol registrados.")
+    @ApiResponse(responseCode = "200", description = "Lista obtenida exitosamente")
     @GetMapping("")
     public ResponseEntity<?> getAllTeams() {
         return new ResponseEntity<>(teamService.getAllTeams(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Consulta de un Equipo por ID", description = "Devuelve la información del equipo correspondiente al ID proporcionado.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Informacion del equipo devuelta correctamente"),
+            @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> getTeamById(@PathVariable("id") int id) {
         try {
@@ -34,6 +44,8 @@ public class TeamController {
         }
     }
 
+    @Operation(summary = "Búsqueda de Equipos por Nombre", description = "Devuelve la lista de equipos cuyos nombres contienen el valor proporcionado en el parámetro de búsqueda.")
+    @ApiResponse(responseCode = "200", description = "Lista devuelta exitosamente")
     @GetMapping("/buscar")
     public ResponseEntity<?> getTeamByName(@RequestParam("nombre") String value) {
         try {
@@ -43,6 +55,11 @@ public class TeamController {
         }
     }
 
+    @Operation(summary = "Creación de un equipo", description = "Registra un nuevo equipo de fútbol")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Equipo creado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Solicitud Inválida")
+    })
     @PostMapping("")
     public ResponseEntity<?> createTeam(@Validated @RequestBody Team team) {
         try{
@@ -52,6 +69,12 @@ public class TeamController {
         }
     }
 
+
+    @Operation(summary = "Actualización de Información de un Equipo", description = "Actualiza la informacion de un equipo previamente registrado")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Datos del equipo actualizados exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTeam(@PathVariable("id") int id, @Validated @RequestBody Team team) {
         try {
@@ -64,7 +87,11 @@ public class TeamController {
     }
 
 
-
+    @Operation(summary = "Eliminación de un Equipo", description = "Elimina el equipo y su informacion")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Equipo eliminado exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTeam(@PathVariable("id") int id) {
         try {
