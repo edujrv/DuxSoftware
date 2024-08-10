@@ -3,7 +3,6 @@ package com.duxsoftware.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Getter
 @Setter
 @Builder
