@@ -22,3 +22,5 @@ INSERT INTO TEAM (id, name, league, country) VALUES (default, 'SL Benfica', 'Pri
 INSERT INTO TEAM (id, name, league, country) VALUES (default, 'Besiktas JK', 'Süper Lig', 'Turquía');
 INSERT INTO TEAM (id, name, league, country) VALUES (default, 'SSC Napoli', 'Serie A', 'Italia');
 INSERT INTO TEAM (id, name, league, country) VALUES (default, 'Atlético Madrid', 'La league', 'España');
+
+INSERT INTO APP_USER (id, username, password) VALUES (default, 'test', '$2a$12$ynkM44LRBT6pRWvSLmFbl.ZLoQiaFmJTj6uRMuoNqPVgVDHt7I5v.')
