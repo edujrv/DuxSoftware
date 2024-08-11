@@ -2,9 +2,11 @@ package com.duxsoftware.controller;
 
 import com.duxsoftware.dto.request.AuthenticationRequest;
 import com.duxsoftware.dto.response.AuthenticationResponse;
+import com.duxsoftware.exception.ErrorResponse;
 import com.duxsoftware.security.jwt.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -42,7 +44,16 @@ public class AuthenticationController {
                             )
                     ),
                     @ApiResponse(responseCode = "401",
-                            description = "Fallo en la autenticacion"
+                            description = "Fallo en la autenticacion",
+                            content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = {
+                                            @ExampleObject( value = "{\"mensaje\": \"Equipo no encontrado\", \"codigo\": 404}"),
+                                    }
+                            )
+                    }
                     )
             }
     )

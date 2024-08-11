@@ -1,11 +1,13 @@
 package com.duxsoftware.controller;
 
 import com.duxsoftware.dto.request.TeamRequest;
+import com.duxsoftware.exception.ErrorResponse;
 import com.duxsoftware.model.Team;
 import com.duxsoftware.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -53,7 +55,18 @@ public class TeamController {
                     content = { @Content(mediaType = "application/json",
                                 schema = @Schema(implementation = Team.class)) }),
             @ApiResponse(responseCode = "404",
-                        description = "Equipo no encontrado")
+                        description = "Equipo no encontrado",
+                        content = {
+                                @Content(
+                                        mediaType = "application/json",
+                                        schema = @Schema(implementation = ErrorResponse.class),
+                                        examples = {
+                                                @ExampleObject(value = "{\"mensaje\": \"Equipo no encontrado\", \"codigo\": 404}"),
+                                        }
+                                )
+                        }
+
+            )
     })
     @GetMapping("/{id}")
     @SneakyThrows
@@ -83,7 +96,17 @@ public class TeamController {
                     description = "Equipo creado exitosamente",
                     content = { @Content(mediaType = "application/json",
                                 schema = @Schema(implementation = Team.class)) }),
-            @ApiResponse(responseCode = "400", description = "Solicitud Inválida")
+            @ApiResponse(responseCode = "400", description = "Solicitud Inválida",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = {
+                                            @ExampleObject(value = "{\"mensaje\": \"La solicitud es invalida\", \"codigo\": 400}"),
+                                    }
+                            )
+                    }
+            )
     })
     @PostMapping("")
     public ResponseEntity<?> createTeam(@Validated @RequestBody TeamRequest teamRequest) {
@@ -103,7 +126,17 @@ public class TeamController {
                     description = "Datos del equipo actualizados exitosamente",
                     content = { @Content(mediaType = "application/json",
                                 schema = @Schema(implementation = Team.class)) }),
-            @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
+            @ApiResponse(responseCode = "404", description = "Equipo no encontrado",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = {
+                                            @ExampleObject( value = "{\"mensaje\": \"Equipo no encontrado\", \"codigo\": 404}"),
+                                    }
+                            )
+                    }
+            )
     })
     @PutMapping("/{id}")
     @SneakyThrows
@@ -120,8 +153,18 @@ public class TeamController {
 
     @Operation(summary = "Eliminación de un Equipo", description = "Elimina el equipo y su informacion", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Equipo eliminado exitosamente"),
-            @ApiResponse(responseCode = "404", description = "Equipo no encontrado")
+            @ApiResponse(responseCode = "204", description = "Equipo eliminado exitosamente", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Equipo no encontrado",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = {
+                                            @ExampleObject( value = "{\"mensaje\": \"Equipo no encontrado\", \"codigo\": 404}"),
+                                    }
+                            )
+                    }
+            )
     })
     @DeleteMapping("/{id}")
     @SneakyThrows
