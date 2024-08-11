@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,18 +27,25 @@ public class TeamController {
     private TeamService teamService;
 
 
-    @Operation(summary = "Consulta de Todos los Equipos", description = "Devuelve la lista de todos los equipos de fútbol registrados.")
+    @Operation(summary = "Consulta de Todos los Equipos",
+            description = "Devuelve la lista de todos los equipos de fútbol registrados.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @ApiResponse(
             responseCode = "200",
             description = "Lista obtenida exitosamente",
-            content = { @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = Team.class)) })
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Team.class))
+                    )
+            })
     @GetMapping("")
     public ResponseEntity<?> getAllTeams() {
         return new ResponseEntity<>(teamService.getAllTeams(), HttpStatus.OK);
     }
 
-    @Operation(summary = "Consulta de un Equipo por ID", description = "Devuelve la información del equipo correspondiente al ID proporcionado.")
+    @Operation(summary = "Consulta de un Equipo por ID", description = "Devuelve la información del equipo correspondiente al ID proporcionado.", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -53,18 +61,23 @@ public class TeamController {
         return new ResponseEntity<>(teamService.getTeamById(id), HttpStatus.OK);
     }
 
-    @Operation(summary = "Búsqueda de Equipos por Nombre", description = "Devuelve la lista de equipos cuyos nombres contienen el valor proporcionado en el parámetro de búsqueda.")
+    @Operation(summary = "Búsqueda de Equipos por Nombre",
+            description = "Devuelve la lista de equipos cuyos nombres contienen el valor proporcionado en el parámetro de búsqueda.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponse(
             responseCode = "200",
             description = "Lista devuelta exitosamente",
-            content = { @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = Team.class)) })
+            content = @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = Team.class))
+            ))
     @GetMapping("/buscar")
     public ResponseEntity<?> getTeamByName(@RequestParam("nombre") String value) {
         return new ResponseEntity<>(teamService.searchTeamsByName(value), HttpStatus.OK);
     }
 
-    @Operation(summary = "Creación de un equipo", description = "Registra un nuevo equipo de fútbol")
+    @Operation(summary = "Creación de un equipo", description = "Registra un nuevo equipo de fútbol",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "201",
                     description = "Equipo creado exitosamente",
@@ -83,7 +96,7 @@ public class TeamController {
     }
 
 
-    @Operation(summary = "Actualización de Información de un Equipo", description = "Actualiza la informacion de un equipo previamente registrado")
+    @Operation(summary = "Actualización de Información de un Equipo", description = "Actualiza la informacion de un equipo previamente registrado", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -105,7 +118,7 @@ public class TeamController {
     }
 
 
-    @Operation(summary = "Eliminación de un Equipo", description = "Elimina el equipo y su informacion")
+    @Operation(summary = "Eliminación de un Equipo", description = "Elimina el equipo y su informacion", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Equipo eliminado exitosamente"),
             @ApiResponse(responseCode = "404", description = "Equipo no encontrado")

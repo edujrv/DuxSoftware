@@ -3,6 +3,12 @@ package com.duxsoftware.controller;
 import com.duxsoftware.dto.request.AuthenticationRequest;
 import com.duxsoftware.dto.response.AuthenticationResponse;
 import com.duxsoftware.security.jwt.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +30,23 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Operation(summary = "Inciar Sesion",
+            description = "Inicia sesion en el sistema"
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200",
+                            description = "Autenticacion exitosa",
+                            content=@Content(
+                                    schema = @Schema(implementation = AuthenticationResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "401",
+                            description = "Fallo en la autenticacion"
+                    )
+            }
+    )
+    @SecurityRequirement(name="")
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 
