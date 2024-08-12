@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "a2a37f44-ab3d-4ba0-97ac-034e346a1ec1",
+		"name": "Equipos de futbol",
+		"description": "Prueba tecnica Duxsoftware",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18980230"
+	},
+	"item": [
+		{
+			"name": "get all teams",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/equipos",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"equipos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTeam by ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/equipos/{{teamId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"equipos",
+						"{{teamId}}"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search teams",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/equipos/buscar?nombre=nuevo",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"equipos",
+						"buscar"
+					],
+					"query": [
+						{
+							"key": "nombre",
+							"value": "nuevo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add team",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Nuevo Equipo FC\",\n  \"liga\": \"Nueva Liga\",\n  \"pais\": \"Nuevo País\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/equipos",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"equipos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update team",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Nuevo Equipo FC\",\n  \"liga\": \"Nueva Liga\",\n  \"pais\": \"Nuevo País\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/equipos/{{teamId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"equipos",
+						"{{teamId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete Team by ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/equipos/{{teamId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"equipos",
+						"{{teamId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();",
+							"var accessToken = responseBody.jwt;",
+							"",
+							"pm.collectionVariables.set(\"bearer\", accessToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"test\",\n    \"password\": \"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "teamId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bearer",
+			"value": ""
+		}
+	]
+}

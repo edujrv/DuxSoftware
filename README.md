@@ -95,6 +95,8 @@ En caso de no haber configurado el `.env` no enviar `--env-file .env`
 - `DELETE /equipos/{id}`: Elimina un equipo.
 - `POST /auth/login`: Autenticación mediante JWT.
 
+Para facilitar la prueba de la aplicacion, se agrego una [coleccion de postman](Equipos%20de%20futbol.postman_collection.json) previamente configurada.
+
 ## Pruebas
 Las pruebas unitarias están implementadas utilizando JUnit 5 y Mockito. Para ejecutar las pruebas:
 ```bash
