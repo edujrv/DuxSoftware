@@ -1,5 +1,6 @@
 package com.duxsoftware.service;
 
+import com.duxsoftware.exception.JwtAuthenticationException;
 import com.duxsoftware.exception.NotFoundException;
 import com.duxsoftware.model.Team;
 import com.duxsoftware.repository.TeamRepository;
@@ -30,7 +31,7 @@ public class TeamServiceTest {
     private TeamRepository teamRepository;
 
     @Test
-    public void testGetAllTeams() {
+    public void testGetAllTeams() throws JwtAuthenticationException {
         // GIVEN
         given(teamRepository.findAll()).willReturn(List.of());
 

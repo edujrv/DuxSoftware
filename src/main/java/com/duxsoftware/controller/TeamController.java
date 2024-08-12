@@ -2,6 +2,7 @@ package com.duxsoftware.controller;
 
 import com.duxsoftware.dto.request.TeamRequest;
 import com.duxsoftware.exception.ErrorResponse;
+import com.duxsoftware.exception.JwtAuthenticationException;
 import com.duxsoftware.model.Team;
 import com.duxsoftware.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +45,11 @@ public class TeamController {
             })
     @GetMapping("")
     public ResponseEntity<?> getAllTeams() {
-        return new ResponseEntity<>(teamService.getAllTeams(), HttpStatus.OK);
+        try {
+                    return new ResponseEntity<>(teamService.getAllTeams(), HttpStatus.OK);
+        } catch (JwtAuthenticationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @Operation(summary = "Consulta de un Equipo por ID", description = "Devuelve la información del equipo correspondiente al ID proporcionado.", security = @SecurityRequirement(name = "bearerAuth"))

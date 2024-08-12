@@ -1,8 +1,10 @@
 package com.duxsoftware.service;
 
+import com.duxsoftware.exception.JwtAuthenticationException;
 import com.duxsoftware.exception.NotFoundException;
 import com.duxsoftware.model.Team;
 import com.duxsoftware.repository.TeamRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,14 @@ public class TeamService {
     @Autowired
     private TeamRepository teamRepository;
 
-    public List<Team> getAllTeams() {
+    public List<Team> getAllTeams() throws JwtAuthenticationException{
+        try {
         return teamRepository.findAll();
+        }catch (ExpiredJwtException e) {
+            throw new JwtAuthenticationException("Expired JWT token");
+        } catch (Exception e) {
+            throw new JwtAuthenticationException("Invalid JWT token");
+        }
     }
 
 
