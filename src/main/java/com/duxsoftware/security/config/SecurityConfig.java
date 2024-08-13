@@ -33,14 +33,17 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login", "/v3/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/login", "/v3/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .csrf(csrf -> csrf.disable()); // CSRF is disabled for stateless JWT tokens
+                .csrf(csrf -> csrf.disable()) // CSRF is disabled for stateless JWT tokens
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.disable()) // Permite cargar la consola H2 en un iframe
+                );
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

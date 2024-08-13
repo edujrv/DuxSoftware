@@ -30,7 +30,8 @@ public class TeamController {
     private TeamService teamService;
 
 
-    @Operation(summary = "Consulta de Todos los Equipos",
+    @Operation(
+            summary = "Consulta de Todos los Equipos",
             description = "Devuelve la lista de todos los equipos de fútbol registrados.",
             security = @SecurityRequirement(name = "bearerAuth")
     )
@@ -42,32 +43,38 @@ public class TeamController {
                             mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = Team.class))
                     )
-            })
+            }
+    )
     @GetMapping("")
     public ResponseEntity<?> getAllTeams() {
-        try {
-                    return new ResponseEntity<>(teamService.getAllTeams(), HttpStatus.OK);
-        } catch (JwtAuthenticationException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
+        return new ResponseEntity<>(teamService.getAllTeams(), HttpStatus.OK);
     }
 
-    @Operation(summary = "Consulta de un Equipo por ID", description = "Devuelve la información del equipo correspondiente al ID proporcionado.", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(
+            summary = "Consulta de un Equipo por ID",
+            description = "Devuelve la información del equipo correspondiente al ID proporcionado.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
                     description = "Informacion del equipo devuelta correctamente",
-                    content = { @Content(mediaType = "application/json",
-                                schema = @Schema(implementation = Team.class)) }),
-            @ApiResponse(responseCode = "404",
-                        description = "Equipo no encontrado",
-                        content = {
-                                @Content(
-                                        mediaType = "application/json",
-                                        schema = @Schema(implementation = ErrorResponse.class),
-                                        examples = {
-                                                @ExampleObject(value = "{\"mensaje\": \"Equipo no encontrado\", \"codigo\": 404}"),
-                                        }
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Team.class)
+                            )
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Equipo no encontrado",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = {
+                                            @ExampleObject(value = "{\"mensaje\": \"Equipo no encontrado\", \"codigo\": 404}"),
+                                    }
                                 )
                         }
 
@@ -79,29 +86,43 @@ public class TeamController {
         return new ResponseEntity<>(teamService.getTeamById(id), HttpStatus.OK);
     }
 
-    @Operation(summary = "Búsqueda de Equipos por Nombre",
+    @Operation(
+            summary = "Búsqueda de Equipos por Nombre",
             description = "Devuelve la lista de equipos cuyos nombres contienen el valor proporcionado en el parámetro de búsqueda.",
-            security = @SecurityRequirement(name = "bearerAuth"))
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @ApiResponse(
             responseCode = "200",
             description = "Lista devuelta exitosamente",
             content = @Content(
                     mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = Team.class))
-            ))
+                    array = @ArraySchema(schema = @Schema(implementation = Team.class)
+                    )
+            )
+    )
     @GetMapping("/buscar")
     public ResponseEntity<?> getTeamByName(@RequestParam("nombre") String value) {
         return new ResponseEntity<>(teamService.searchTeamsByName(value), HttpStatus.OK);
     }
 
-    @Operation(summary = "Creación de un equipo", description = "Registra un nuevo equipo de fútbol",
-            security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(
+            summary = "Creación de un equipo",
+            description = "Registra un nuevo equipo de fútbol",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "201",
+            @ApiResponse(
+                    responseCode = "201",
                     description = "Equipo creado exitosamente",
-                    content = { @Content(mediaType = "application/json",
-                                schema = @Schema(implementation = Team.class)) }),
-            @ApiResponse(responseCode = "400", description = "Solicitud Inválida",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Team.class))
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Solicitud Inválida",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -124,14 +145,22 @@ public class TeamController {
     }
 
 
-    @Operation(summary = "Actualización de Información de un Equipo", description = "Actualiza la informacion de un equipo previamente registrado", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(
+            summary = "Actualización de Información de un Equipo",
+            description = "Actualiza la informacion de un equipo previamente registrado",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
                     description = "Datos del equipo actualizados exitosamente",
-                    content = { @Content(mediaType = "application/json",
-                                schema = @Schema(implementation = Team.class)) }),
-            @ApiResponse(responseCode = "404", description = "Equipo no encontrado",
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Team.class))
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Equipo no encontrado",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -156,10 +185,20 @@ public class TeamController {
     }
 
 
-    @Operation(summary = "Eliminación de un Equipo", description = "Elimina el equipo y su informacion", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(
+            summary = "Eliminación de un Equipo",
+            description = "Elimina el equipo y su informacion",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Equipo eliminado exitosamente", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Equipo no encontrado",
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Equipo eliminado exitosamente",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Equipo no encontrado",
                     content = {
                             @Content(
                                     mediaType = "application/json",

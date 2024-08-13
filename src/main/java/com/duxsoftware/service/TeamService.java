@@ -16,7 +16,7 @@ public class TeamService {
     @Autowired
     private TeamRepository teamRepository;
 
-    public List<Team> getAllTeams() throws JwtAuthenticationException{
+    public List<Team> getAllTeams() {
         return teamRepository.findAll();
     }
 
